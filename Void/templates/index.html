@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" view-fit="cover"/>
+  <title>Void IA</title>
+
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="Logo-void.ico">
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script> marked.use({ mangle:false, headerIds:false, smartypants:false }); </script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+    document.addEventListener('DOMContentLoaded', () => hljs.configure({ ignoreUnescapedHTML: true }));
+  </script>
+  <script async id="mathjax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body class="app">
+  <header id="topbar">
+    <button id="toggle-sidebar" title="Mostrar/ocultar chats">☰</button>
+    <h1 class="brand">
+      <span>Void AI</span>
+      <img src="Logo-void.ico" alt="" class="brand-logo">
+    </h1>
+    <div class="topbar-actions"></div>
+  </header>
+
+  <div id="layout">
+    <aside id="sidebar">
+      <header class="sidebar-header">
+        <button id="new-chat" type="button" title="Nuevo chat">
+          <span>Nuevo</span>
+          <svg width="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+               xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.28 6.4 11.74 15.94c-.95.95-3.77 1.39-4.4.76-.63-.63-.2-3.45.75-4.4L16.04 3.84a3.06 3.06 0 0 1 4.11 4.11Z"
+                  stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M11 4H6A4 4 0 0 0 2 8v10a4 4 0 0 0 4 4h11c2.21 0 3-1.8 3-4v-5"
+                  stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <nav id="conv-list"></nav>
+      <footer class="sidebar-footer"></footer>
+    </aside>
+
+    <main id="main">
+      <div id="chat-container">
+        <div id="chat-box">
+          <div id="chat-empty" class="chat-empty">
+            <h2>Bienvenido a</h2>
+            <img src="Logo void transparente.png" alt="Void">
+            <p>Escribe tu pregunta o usa <b>{ }</b> para insertar código.</p>
+          </div>
+          <div id="bottom-spacer"></div>
+        </div>
+        <div id="input-area">
+          <textarea id="user-input" placeholder="Pregunta lo que quieras" autocomplete="off"></textarea>
+          <button id="code-btn" title="Insertar código" type="button"><b>{ }</b></button>
+          <button id="send-btn" title="Enviar" type="button">
+            <svg width="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                 id="send-alt" class="icon glyph" fill="#ffffff" aria-hidden="true">
+              <path d="M21.88,4.73,16.2,20.65A2,2,0,0,1,14.3,22h0a2,2,0,0,1-1.9-1.31l-2.12-5.52 4.03-4.03a1,1,0,1,0-1.42-1.42l-4.03 4.03L3.31,11.63a2,2,0,0,1,0-3.83L19.27,2.12a2,2,0,0,1,2.61,2.61Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="code-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3>Insertar bloque de código</h3>
+        <button class="modal-close" id="code-close" type="button">×</button>
+      </header>
+      <div class="modal-body">
+        <label>Lenguaje
+          <select id="code-lang">
+            <option value="">(auto)</option>
+            <option>python</option><option>javascript</option><option>html</option>
+            <option>css</option><option>bash</option><option>json</option>
+            <option>java</option><option>c</option><option>cpp</option><option>sql</option>
+            <option>markdown</option>
+          </select>
+        </label>
+        <label style="margin-top:8px;">Archivo (opcional)
+          <input id="code-filename" type="text" placeholder="ej: app.py">
+        </label>
+        <label style="margin-top:8px;">Código</label>
+        <textarea id="code-text" rows="10" spellcheck="false" placeholder="Pegue o escriba su código aquí..."></textarea>
+      </div>
+      <footer class="modal-footer">
+        <button id="code-insert" class="primary" type="button">Insertar</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="dialog-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3 id="dialog-title">Confirmar</h3>
+        <button class="modal-close" id="dialog-close">×</button>
+      </header>
+      <div class="modal-body">
+        <p id="dialog-message">¿Seguro?</p>
+      </div>
+      <footer class="modal-footer">
+        <button id="dialog-cancel" class="modal-close">Cancelar</button>
+        <button id="dialog-ok" class="primary">Aceptar</button>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // ====== refs ======
+    const chatBox     = document.getElementById("chat-box");
+    const spacer      = document.getElementById("bottom-spacer");
+    const input       = document.getElementById("user-input");
+    const sendBtn     = document.getElementById("send-btn");
+    const newBtn      = document.getElementById("new-chat");
+    const convListEl  = document.getElementById("conv-list");
+    const toggleBtn   = document.getElementById("toggle-sidebar");
+    const inputArea   = document.getElementById("input-area");
+    const chatEmpty   = document.getElementById("chat-empty");
+
+    const codeBtn     = document.getElementById('code-btn');
+    const codeModal   = document.getElementById('code-modal');
+    const codeClose   = document.getElementById('code-close');
+    const codeInsert  = document.getElementById('code-insert');
+    const codeLang    = document.getElementById('code-lang');
+    const codeText    = document.getElementById('code-text');
+    const codeFilename= document.getElementById('code-filename');
+
+    /* ========= TOASTS ========= */
+    const toastBox = document.getElementById('toast-container');
+
+    /** Muestra un toast.
+    * @param {string} message
+    * @param {'info'|'success'|'warn'|'error'} type
+    * @param {number} ms
+    */
+
+    function toast(message, type='info', ms=3500){
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `
+        <span style="opacity:.9">${message}</span>
+        <button class="toast-close" title="Cerrar">×</button>
+      `;
+      toastBox.appendChild(el);
+
+      const close = () => {
+        el.style.animation = 'toast-out .15s ease-in forwards';
+        setTimeout(() => el.remove(), 160);
+      };
+      el.querySelector('.toast-close').onclick = close;
+      setTimeout(close, ms);
+    }
+
+    /* ========= DIALOG GENÉRICO ========= */
+    const dlg = {
+      root:  document.getElementById('dialog-modal'),
+      title: document.getElementById('dialog-title'),
+      msg:   document.getElementById('dialog-message'),
+      ok:    document.getElementById('dialog-ok'),
+      cancel:document.getElementById('dialog-cancel'),
+      x:     document.getElementById('dialog-close'),
+    };
+
+    function openDialog()  { dlg.root.classList.remove('hidden'); document.body.classList.add('modal-open'); }
+    function closeDialog() { dlg.root.classList.add('hidden');    document.body.classList.remove('modal-open'); }
+
+    /** Pregunta con modal. Devuelve Promise<boolean> */
+    function askConfirm({ title='Confirmar', message='¿Seguro?', okText='Aceptar', cancelText='Cancelar'}={}){
+      dlg.title.textContent = title;
+      dlg.msg.textContent = message;
+      dlg.ok.textContent = okText;
+      dlg.cancel.textContent = cancelText;
+
+      return new Promise(resolve => {
+        const onOk = () => { cleanup(); resolve(true);  };
+        const onCancel = () => { cleanup(); resolve(false); };
+
+        function cleanup(){
+          dlg.ok.removeEventListener('click', onOk);
+          dlg.cancel.removeEventListener('click', onCancel);
+          dlg.x.removeEventListener('click', onCancel);
+          dlg.root.removeEventListener('click', onBackdrop);
+          closeDialog();
+        }
+        function onBackdrop(e){ if (e.target === dlg.root) onCancel(); }
+
+        dlg.ok.addEventListener('click', onOk);
+        dlg.cancel.addEventListener('click', onCancel);
+        dlg.x.addEventListener('click', onCancel);
+        dlg.root.addEventListener('click', onBackdrop);
+
+        openDialog();
+      });
+    }
+
+    /* ========= PROMPT (input en modal) ========= */
+    async function uiPrompt({
+      title = "Ingrese un valor",
+      label = "Valor",
+      value = "",
+      okText = "Aceptar",
+      cancelText = "Cancelar",
+      placeholder = ""
+    } = {}) {
+      // crear modal efímero
+      const root = document.createElement('div');
+      root.className = 'modal';
+      root.innerHTML = `
+        <div class="modal-card" role="dialog" aria-modal="true">
+          <header class="modal-header">
+            <h3>${title}</h3>
+            <button class="modal-close" data-x>×</button>
+          </header>
+          <div class="modal-body">
+            <label style="display:block;margin-bottom:6px;">${label}</label>
+            <input type="text" class="prompt-input"
+                  style="width:100%;background:#0f0f0f;color:#fff;border:1px solid var(--border);border-radius:8px;padding:8px;"
+                  value="${value.replace(/"/g,'&quot;')}"
+                  placeholder="${placeholder.replace(/"/g,'&quot;')}">
+          </div>
+          <footer class="modal-footer">
+            <button data-cancel class="modal-close">${cancelText}</button>
+            <button data-ok class="primary">${okText}</button>
+          </footer>
+        </div>
+      `;
+
+      // montar
+      document.body.appendChild(root);
+      document.body.classList.add('modal-open');
+      const inputEl = root.querySelector('.prompt-input');
+      inputEl.focus();
+      inputEl.select();
+
+      return new Promise(resolve => {
+        const cleanup = (val=null) => {
+          document.body.classList.remove('modal-open');
+          root.remove();
+          resolve(val);
+        };
+        const onOk = () => {
+          const v = inputEl.value.trim();
+          cleanup(v || "");
+        };
+        const onCancel = () => cleanup(null);
+        const onBackdrop = e => { if (e.target === root) onCancel(); };
+        const onKey = e => {
+          if (e.key === 'Enter') onOk();
+          if (e.key === 'Escape') onCancel();
+        };
+
+        root.addEventListener('click', onBackdrop);
+        root.querySelector('[data-ok]').addEventListener('click', onOk);
+        root.querySelector('[data-cancel]').addEventListener('click', onCancel);
+        root.querySelector('[data-x]').addEventListener('click', onCancel);
+        root.addEventListener('keydown', onKey, true);
+      });
+    }
+
+    // Enlaza eventos al textarea
+    const TA_MAX_LINES = 9;
+
+    const COLLAPSE_BP = 1100;
+    let currentConversationId = null;
+
+    // Auto-resize del textarea hasta 6 líneas
+    function fitTextareaToContent(el, maxLines = 9){
+      if (!el) return;
+      const cs = getComputedStyle(el);
+      const lineH = parseFloat(cs.lineHeight) || 20;
+      const vPad  = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+      const maxH  = lineH * maxLines + vPad;
+
+      el.style.maxHeight = `${maxH}px`;
+
+      // Resetear para medir correctamente el scrollHeight
+      el.style.height = 'auto';
+      const needed = Math.min(el.scrollHeight, maxH);
+      el.style.height = needed + 'px';
+    }
+
+    function handleTextareaInput(){
+      fitTextareaToContent(input, TA_MAX_LINES);
+      // El input cambia de alto, así que actualizamos el composer
+      syncComposerPadding();
+    }
+
+    fitTextareaToContent(input, TA_MAX_LINES);
+    input.addEventListener('input', handleTextareaInput);
+    input.addEventListener('paste', () => setTimeout(handleTextareaInput, 0)); // después de pegar
+
+    function scrollToBottomSmooth() {
+      chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+    }
+
+    // ====== helpers placeholder ======
+    function updateChatEmpty(){
+      const hasMsgs = !!chatBox.querySelector('.row');
+      if (chatEmpty) chatEmpty.style.display = hasMsgs ? 'none' : 'grid';
+    }
+    function clearChat(){
+      chatBox.querySelectorAll('.row').forEach(n => n.remove());
+      if (spacer && !chatBox.contains(spacer)) chatBox.appendChild(spacer);
+      updateChatEmpty();
+    }
+
+    // ====== responsive sidebar ======
+    function applyResponsiveSidebar(){
+      const pref = localStorage.getItem("sidebar_collapsed"); // "1" | "0" | null
+      const shouldCollapse = pref !== null ? pref === "1" : (window.innerWidth <= COLLAPSE_BP);
+      document.body.classList.toggle('collapsed', shouldCollapse);
+    }
+    window.addEventListener('resize', applyResponsiveSidebar);
+    applyResponsiveSidebar();
+
+    toggleBtn.onclick = () => {
+      document.body.classList.toggle("collapsed");
+      const pref = document.body.classList.contains("collapsed") ? "1" : "0";
+      localStorage.setItem("sidebar_collapsed", pref);
+      setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 0);
+    };
+
+    // ====== util ======
+    function esc(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    function renderMarkdownWithMath(text){
+      const preserved = (text || "")
+        .replace(/\\\(/g, '\\\\(').replace(/\\\)/g, '\\\\)')
+        .replace(/\\\[/g, '\\\\[').replace(/\\\]/g, '\\\\]');
+      return DOMPurify.sanitize(marked.parse(preserved), { USE_PROFILES:{ html:true } });
+    }
+
+    function enhanceCodeBlocks(scope=document){
+      scope.querySelectorAll("pre > code").forEach(code=>{
+        const pre = code.parentElement;
+        if (pre.classList.contains("hl-prepared")) return;
+        pre.classList.add("hl-prepared");
+        try { hljs.highlightElement(code); } catch {}
+        const wrap = document.createElement("div"); wrap.className="code-wrap";
+        pre.replaceWith(wrap); wrap.appendChild(pre);
+        const header = document.createElement("div"); header.className="code-header";
+        const meta = document.createElement("span"); meta.className="code-meta";
+        const lang = (code.className.match(/language-([a-z0-9+#]+)/i)||[, "texto"])[1];
+        meta.textContent = lang.toLowerCase();
+        const btn = document.createElement("button"); btn.className="copy-btn"; btn.textContent="Copiar";
+        btn.onclick = async ()=>{ await navigator.clipboard.writeText(code.innerText); btn.textContent="Copiado ✓"; setTimeout(()=>btn.textContent="Copiar",1200); };
+        header.append(meta, btn); wrap.appendChild(header);
+      });
+    }
+
+    function addMessage(sender, text, { typeset = true } = {}){
+      if (chatEmpty) chatEmpty.style.display = 'none';
+      const row = document.createElement("div");
+      row.className = "row " + sender;
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = renderMarkdownWithMath(text);
+      row.appendChild(bubble);
+      chatBox.insertBefore(row, spacer);
+      requestAnimationFrame(() => requestAnimationFrame(scrollToBottomSmooth));
+      enhanceCodeBlocks(bubble);
+      if (typeset && window.MathJax?.typesetPromise) MathJax.typesetPromise([bubble]).catch(console.error);
+    }
+
+    // ====== composer spacing (móvil) ======
+    function autoScroll(force=false){
+      const nearBottom = (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) < 80;
+      if (force || nearBottom) chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function syncComposerPadding(){
+      const h = Math.ceil(inputArea?.getBoundingClientRect().height || 64);
+      document.documentElement.style.setProperty('--composer-h', h+'px');
+      if (spacer) spacer.style.height = `calc(${h}px + env(safe-area-inset-bottom) + 12px)`;
+      // si estás cerca del fondo, baja
+      const nearBottom = (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) < 80;
+      if (nearBottom) chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+      autoScroll(true);
+    }
+    new ResizeObserver(syncComposerPadding).observe(inputArea);
+    window.addEventListener('resize', syncComposerPadding);
+    window.addEventListener('orientationchange', syncComposerPadding);
+    if (window.visualViewport){
+      visualViewport.addEventListener('resize', syncComposerPadding);
+      visualViewport.addEventListener('scroll', syncComposerPadding);
+    }
+    syncComposerPadding();
+    updateChatEmpty();
+
+    // ====== Conversaciones (CRUD) ======
+    async function loadConversations(){
+      const res = await fetch('/conversations');
+      const data = await res.json();
+      if (!data.length){
+        convListEl.innerHTML = `<div class="empty" style="opacity:.7;cursor:default">
+          <span>No hay chats aún. Dale a <b>Nuevo</b>.</span>
+        </div>`;
+        return;
+      }
+      convListEl.innerHTML = data.map(c => `
+        <div class="conv ${c.id===currentConversationId?'active':''}" data-id="${c.id}">
+          <span class="conv-title" title="${esc(c.title||'Nuevo chat')}">${esc(c.title||'Nuevo chat')}</span>
+          <span class="actions">
+            <button class="rename" data-action="rename" title="Renombrar">
+              <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M20.15 7.94 8.28 19.81c-1.06 1.07-4.23 1.56-4.95.85-.72-.71-.21-3.88.85-4.95L16.05 3.84" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="delete" data-action="delete" title="Borrar">
+              <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M20.5 6H3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M18.83 8.5 18.37 15.4c-.18 2.66-.27 3.99-1.13 4.8-.85.81-2.18.8-4.84.8h-.77c-2.66 0-3.99 0-4.86-.81-.87-.8-.96-2.14-1.13-4.79L5.17 8.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M9.17 4A3 3 0 0 1 12 2a3 3 0 0 1 2.83 2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </span>
+        </div>`).join('');
+    }
+
+    convListEl.addEventListener('click', async (e) => {
+      const item = e.target.closest('.conv'); if (!item) return;
+      const id = item.dataset.id;
+      const act = e.target.closest('[data-action]')?.dataset.action;
+    
+      if (!act){
+        currentConversationId = id;
+        document.querySelectorAll('.conv').forEach(x => x.classList.toggle('active', x===item));
+        await loadHistory();
+        return;
+      }
+      if (act === 'delete'){
+        const ok = await askConfirm({
+          title: 'Borrar chat',
+          message: 'Esto eliminará todos los mensajes de esta conversación. ¿Continuar?',
+          okText: 'Sí, borrar',
+          cancelText: 'Cancelar'
+        });
+        if (!ok) return;
+      
+        const res = await fetch(`/conversations/${id}`, { method:'DELETE' });
+        if (res.ok){
+          if (currentConversationId === id){
+            currentConversationId = null;
+            clearChat();
+          }
+          await loadConversations();
+          toast('Chat eliminado', 'success');
+        } else {
+          toast('No se pudo eliminar el chat', 'error');
+        }
+        return;
+      }
+      if (act === 'rename') {
+        const actual = item.querySelector('.conv-title').textContent.trim();
+
+        // usa el modal bonito, no prompt()
+        const nuevo = await uiPrompt({
+          title: "Renombrar chat",
+          label: "Nuevo título",
+          value: actual,
+          okText: "Aceptar"
+        });
+
+        if (!nuevo) return;
+
+        // PATCH al backend
+        await fetch(`/conversations/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: nuevo })
+        });
+
+        // refresca y deja marcado el actual
+        await loadConversations();
+        const el = [...document.querySelectorAll('.conv')].find(x => x.dataset.id === id);
+        if (el) el.classList.add('active');
+        return;
+      }
+    });
+
+    async function createNewConversation(){
+      const res = await fetch("/conversations", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ title: "Nuevo chat" })
+      });
+      const data = await res.json();
+      currentConversationId = data.id;
+      clearChat();                 // placeholder visible hasta el primer mensaje
+      await loadConversations();
+      const el = [...document.querySelectorAll('.conv')].find(x => x.dataset.id === currentConversationId);
+      if (el) el.classList.add('active');
+    }
+    newBtn.onclick = createNewConversation;
+
+    async function loadHistory(){
+      if (!currentConversationId) return;
+      const res = await fetch(`/history?conversation_id=${currentConversationId}`);
+      if (!res.ok) return;
+      const history = await res.json();
+      clearChat();
+      history.forEach(m => addMessage(m.role === "user" ? "user" : "bot", m.content));
+      scrollToBottomSmooth();
+      syncComposerPadding();
+      updateChatEmpty();
+    }
+
+    // ====== Envío ======
+    sendBtn.onclick = async () => {
+      const message = input.value.trim();
+      if (!message) return;
+
+      // limpiar ya
+      input.value = "";
+      sendBtn.disabled = true;
+      fitTextareaToContent(input, TA_MAX_LINES);
+      syncComposerPadding();
+
+      // UI
+      addMessage("user", message);
+      const thinkRow = document.createElement("div");
+      thinkRow.className = "row bot";
+      const thinkBubble = document.createElement("div");
+      thinkBubble.className = "bubble thinking";
+      thinkBubble.textContent = "Void está pensando...";
+      thinkRow.appendChild(thinkBubble);
+      chatBox.insertBefore(thinkRow, spacer);
+      scrollToBottomSmooth();
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, conversation_id: currentConversationId })
+        });
+        const data = await res.json();
+
+        thinkRow.remove();
+
+        if (!currentConversationId && data.conversation_id) {
+          currentConversationId = data.conversation_id;
+          await loadConversations();
+        }
+
+        addMessage("bot", data.reply || "Error procesando el mensaje");
+        syncComposerPadding();
+
+      } catch (e) {
+        thinkRow.remove();
+        addMessage("bot", "Error de red.");
+        console.error(e);
+      } finally {
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    };
+
+    // Enter para enviar
+    input.addEventListener("keydown", (e) => {
+      // Evita enviar mientras se está componiendo (IME)
+      let composing = false;
+      input.addEventListener('compositionstart', () => composing = true);
+      input.addEventListener('compositionend',   () => composing = false);
+
+      // Enviar SOLO con Ctrl+Enter (Windows/Linux) o ⌘+Enter (Mac)
+      // Enter normal = salto de línea (comportamiento nativo del textarea)
+      input.addEventListener("keydown", (e) => {
+        if (composing) return;
+
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          sendBtn.click();
+        }
+      });
+    });
+
+    // Modal código
+    function openCodeModal(){ codeText.value=""; codeFilename.value=""; codeLang.value=""; codeModal.classList.remove('hidden'); codeText.focus(); }
+    function closeCodeModal(){ codeModal.classList.add('hidden'); }
+    codeBtn.onclick = openCodeModal;
+    codeClose.onclick = closeCodeModal;
+    codeModal.addEventListener('click', (e)=>{ if(e.target === codeModal) closeCodeModal(); });
+    codeInsert.onclick = ()=>{
+      const lang = (codeLang.value || '').trim();
+      const filename = codeFilename.value.trim();
+      const code = codeText.value.replace(/\t/g,'  ');
+      if(!code) return;
+      let header = filename ? `// ${filename}\n` : '';
+      if(lang === 'python' || lang === 'bash') header = filename ? `# ${filename}\n` : header;
+      const message = input.value.trim();
+      const fenced = "```" + (lang || '') + "\n" + header + code + "\n```";
+      input.value = message + "\n" + fenced;
+      closeCodeModal();
+      sendBtn.click();
+    };
+
+    // Arranque
+    loadConversations();
+  </script>
+</body>
+</html>
