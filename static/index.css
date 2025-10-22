@@ -6,7 +6,7 @@
   --border: #2a2a2a;
   --text: #e5e7eb;
   --muted: #bdbdbd;
-  --primary: #a760d6;
+  --primary: #6b4aab;
   --sidebar-w: 280px;
   --header-h: 56px;
   --composer-h: 64px;
@@ -222,7 +222,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
   padding:12px 16px; border-radius:10px; cursor:pointer;
 }
 #send-btn:disabled{ opacity:.6; cursor:not-allowed; }
-#send-btn:hover{ background: #c875ff; }
+#send-btn:hover{ background: #8051c7; }
 #bottom-spacer{ height: calc(var(--composer-h) + env(safe-area-inset-bottom) + 12px); }
 
 /* BLOQUES DE CÓDIGO */
@@ -339,7 +339,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
   padding: 8px 12px;
   cursor: pointer;
 }
-.modal .primary:hover{ background: #c875ff; }
+.modal .primary:hover{ background: #8051c7; }
 
 /* Toasts */
 #toast-container{
