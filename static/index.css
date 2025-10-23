@@ -1,9 +1,9 @@
 /* VARIABLES */
 :root{
-  --bg: #121212;
-  --panel: #1e1e1e;
-  --panel2: #161616;
-  --border: #2a2a2a;
+  --bg: #0b0b0b;
+  --panel: #0b0b0b;
+  --panel2: #0b0b0b;
+  --border: #222;
   --text: #e5e7eb;
   --muted: #bdbdbd;
   --primary: #6b4aab;
@@ -31,7 +31,7 @@ body{
   padding: 0 12px;
   background: var(--panel2);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  box-shadow: 0 2px 12px rgba(138, 43, 226, .3);
 }
 #topbar #toggle-sidebar{
   position: static;
@@ -115,7 +115,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
   transition: background .12s ease, outline-color .12s ease;
 }
 .conv:hover{ background:#2a2a2a; }
-.conv.active{ outline:2px solid var(--primary); background:#262626; }
+.conv.active{ outline:2px solid var(--primary); background:#222; }
 .conv-title{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .conv .actions{ display:inline-flex; gap:6px; }
@@ -168,7 +168,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 
 #chat-box .bubble{
   max-width: min(720px, 90%);
-  background:#3a3a3a;
+  background:#222;
   color:var(--text);
   padding:10px 14px;
   border-radius:16px;
@@ -204,7 +204,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
   padding:12px;
   border-radius:10px;
   border:1px solid var(--border);
-  background:#0f0f0f;
+  background:#222;
   color:var(--text);
   font-size:16px;
   min-height: 44px;
@@ -240,7 +240,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 }
 .code-meta{
   font:12px/1.2 system-ui, -apple-system, Segoe UI, Arial;
-  opacity:.85; background:#0f0f0f; border:1px solid var(--border);
+  opacity:.85; background:#222; border:1px solid var(--border);
   color:#ddd; border-radius:6px; padding:2px 6px; pointer-events:auto;
 }
 .code-header .copy-btn{
@@ -312,7 +312,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 .modal-body input,
 .modal-body textarea{
   width: 100%;
-  background: #0f0f0f;
+  background: #222;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 8px;
