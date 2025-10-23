@@ -582,17 +582,9 @@
       input.addEventListener('compositionstart', () => composing = true);
       input.addEventListener('compositionend',   () => composing = false);
 
-      // Enviar SOLO con Ctrl+Enter (Windows/Linux) o ⌘+Enter (Mac)
-      // Enter normal = salto de línea (comportamiento nativo del textarea)
-      input.addEventListener("keydown", (e) => {
-        if (composing) return;
-
-        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault();
-          sendBtn.click();
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendBtn.click(); }
         }
-      });
-    });
+      );
 
     // Modal código
     function openCodeModal(){ codeText.value=""; codeFilename.value=""; codeLang.value=""; codeModal.classList.remove('hidden'); codeText.focus(); }
