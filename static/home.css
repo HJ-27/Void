@@ -399,27 +399,58 @@ html, body {
 }
 
 /* ======= RESPONSIVE ======= */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .navbar .container {
     flex-direction: column;
     gap: 10px;
   }
 
   .nav-links a {
-    margin: 8px 0;
+    margin: 0 7px;
     display: inline-block;
+    
+    align-self: flex-end;
+    font-size: .7rem;
   }
-
-  .hero-content h1 {
-    font-size: 2.5rem;
+  
+  .nav-links {
+    max-width: calc(407px - 30px);
+    padding-right: 0;
+    padding-left: 52px;
   }
-
   .us-section {
-    padding: 120px 20px;
+    padding: 100px 10px 20px 10px;
+    margin: -10px 0 -30px 0;
   }
 
   .logo-usta {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
+  }
+
+  .logo-text {
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+    opacity: 0;
+  }
+
+  .right-section {
+    margin: -7px;
+    padding: 0;
+  }
+
+  .logo-area img{
+    width: 30px;
+    height: 30px;
+    margin-bottom: -7px;
+  }
+
+  .logo-area {
+    align-self: flex-start;
+    position: absolute;
   }
 }
+

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (navHome) navHome.textContent = isES ? "INICIO" : "HOME";
     if (navUs) navUs.textContent = isES ? "NOSOTROS" : "ABOUT US";
     if (navLogin) navLogin.textContent = isES ? "ACCEDER" : "LOGIN";
-    if (chatbot) navLogin.textContent = isES ? "CHAT IA" : "AI CHAT";
+    if (chatbot) chatbot.textContent = isES ? "CHAT IA" : "AI CHAT";
 
     // ===== INICIO =====
     const mainSub = document.getElementById("mainSub");
