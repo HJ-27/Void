@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOID | Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="Logo-void.ico">
+</head>
+
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <div class="container">
+      <div class="logo-area">
+        <a href="index.html" target="_blank">
+          <img src="Logo_void_transparente.png" alt="VOID" class="logo-img" />
+        </a>
+        <div class="logo-text">VOID<br><span>AI and Software Factory</span></div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" id="navHome">INICIO</a>
+        <a href="us.html" id="navUs">NOSOTROS</a>
+        <a href="login.html" class="active" id="navLogin">ACCEDER</a>
+      </nav>
+
+      <div class="right-section">
+        <div class="lang-switch">
+          <button id="btn-es" class="lang-btn">SPA</button>
+          <button id="btn-en" class="lang-btn">ENG</button>
+        </div>
+        <a href="https://www.ustabuca.edu.co" target="_blank">
+          <img src="USTA.png" alt="USTA" class="logo-usta" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== LOGIN SECTION ===== -->
+  <main class="login-section fade-section">
+    <div class="login-box">
+      <h2 id="loginTitle">Bienvenido</h2>
+
+      <div class="input-group">
+        <label for="login-email" id="emailLabel">Correo electrónico</label>
+        <input type="email" id="login-email" placeholder="Introduce tu correo" />
+      </div>
+
+      <div class="input-group">
+        <label for="login-pass" id="passLabel">Contraseña</label>
+        <input type="password" id="login-pass" placeholder="Introduce tu contraseña" />
+      </div>
+
+      <button id="loginBtn" class="btn-primary">Acceder</button>
+
+      <p id="registerQuestion" class="register-text">¿No tienes cuenta?</p>
+      <button id="open-register-btn" class="btn-secondary">Regístrate</button>
+    </div>
+  </main>
+
+  <!-- ===== MODAL REGISTRO ===== -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-register" class="close">&times;</span>
+      <h2 id="modalTitle">Crear cuenta</h2>
+
+      <div class="input-group">
+        <input type="text" id="reg-name" placeholder="Nombre completo" />
+      </div>
+      <div class="input-group">
+        <input type="email" id="reg-email" placeholder="Correo electrónico" />
+      </div>
+      <div class="input-group">
+        <input type="password" id="reg-pass" placeholder="Contraseña" />
+      </div>
+
+      <button id="reg-submit" class="btn-primary">Crear cuenta</button>
+      <p id="reg-msg" class="register-message"></p>
+    </div>
+  </div>
+
+  <div class="redes-fijas">
+    <a href="https://www.instagram.com/aivoid_software" target="_blank">
+      <img src="insta-logo.png" class="redes-icon" alt="Instagram" />
+    </a>
+    <a href="https://x.com/void_ia" target="_blank">
+      <img src="X-Logo.png" class="redes-icon" alt="X" />
+    </a>
+    <a href="https://www.tiktok.com/@ia.voidsoft" target="_blank">
+      <img src="tiktok-Logo.png" class="redes-icon" alt="TikTok" />
+    </a>
+  </div>
+
+  <script src="proyecto.js"></script>
+</body>
+</html>
