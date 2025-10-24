@@ -16,9 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const navHome = document.getElementById("navHome");
     const navUs = document.getElementById("navUs");
     const navLogin = document.getElementById("navLogin");
+    const chatbot = document.getElementById("chatbot");
     if (navHome) navHome.textContent = isES ? "INICIO" : "HOME";
     if (navUs) navUs.textContent = isES ? "NOSOTROS" : "ABOUT US";
     if (navLogin) navLogin.textContent = isES ? "ACCEDER" : "LOGIN";
+    if (chatbot) navLogin.textContent = isES ? "CHAT IA" : "AI CHAT";
 
     // ===== INICIO =====
     const mainSub = document.getElementById("mainSub");
@@ -142,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? "✅ Inicio de sesión exitoso. Redirigiendo..."
           : "✅ Login successful. Redirecting...";
         setTimeout(() => {
-          window.location.href = "IA.html";
+          window.location.href = "/app";
         }, 1500);
         return;
       }

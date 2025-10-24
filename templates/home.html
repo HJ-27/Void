@@ -5,22 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VOID | Inicio</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="Logo-void.ico">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='Logo-void.ico') }}">
 </head>
 
 <body>
   <header class="navbar">
     <div class="container">
       <div class="logo-area">
-          <img src="Logo_void_transparente.png" alt="VOID" class="logo-img" />
+          <img src="{{ url_for('static', filename='Logo void transparente.png') }}" alt="VOID" class="logo-img" />
         <div class="logo-text">VOID<br><span>AI and Software Factory</span></div>
       </div>
 
       <nav class="nav-links">
-        <a href="index.html" class="active" id="navHome">INICIO</a>
-        <a href="us.html" id="navUs">NOSOTROS</a>
-        <a href="login.html" id="navLogin">ACCEDER</a>
+        <a id="navHome" href="{{ url_for('home_page') }}">INICIO</a>
+        <a id="navUs"   href="{{ url_for('us_page') }}">NOSOTROS</a>
+        <a id="navLogin" href="{{ url_for('login_page') }}">ACCEDER</a>
+        <a href="{{ url_for('chat_ui') }}">AI CHAT</a>
       </nav>
 
       <div class="right-section">
@@ -29,7 +30,7 @@
           <button id="btn-en" class="lang-btn">ENG</button>
         </div>
         <a href="https://www.ustabuca.edu.co" target="_blank">
-          <img src="USTA.png" alt="USTA" class="logo-usta" />
+          <img src="{{ url_for('static', filename='USTA.png') }}" alt="USTA" class="logo-usta" />
         </a>
       </div>
     </div>
@@ -45,16 +46,16 @@
 
   <div class="redes-fijas">
     <a href="https://www.instagram.com/aivoid_software" target="_blank">
-      <img src="insta-logo.png" class="redes-icon" alt="Instagram" />
+      <img src="{{ url_for('static', filename='insta-logo.png') }}" class="redes-icon" alt="Instagram" />
     </a>
     <a href="https://x.com/void_ia" target="_blank">
-      <img src="X-Logo.png" class="redes-icon" alt="X" />
+      <img src="{{ url_for('static', filename='X-Logo.png') }}" class="redes-icon" alt="X" />
     </a>
     <a href="https://www.tiktok.com/@ia.voidsoft" target="_blank">
-      <img src="tiktok-Logo.png" class="redes-icon" alt="TikTok" />
+      <img src="{{ url_for('static', filename='tiktok-Logo.png') }}" class="redes-icon" alt="TikTok" />
     </a>
   </div>
 
-  <script src="proyecto.js"></script>
+  <script defer src="{{ url_for('static', filename='proyecto.js') }}"></script>
 </body>
 </html>

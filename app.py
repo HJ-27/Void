@@ -112,9 +112,21 @@ def get_or_set_user(resp=None):
     return user_id, resp
 
 @app.route("/")
-def home():
+def home_page():
+    return render_template("home.html")
+
+@app.route("/us")
+def us_page():
+    return render_template("us.html")
+
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/app")
+def chat_ui():
     resp = make_response(render_template("index.html"))
-    _, resp = get_or_set_user(resp)
+    _, resp = get_or_set_user(resp)  # sigues seteando cookie user_id
     return resp
 
 @app.route("/conversations", methods=["GET"])
