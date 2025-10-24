@@ -65,10 +65,11 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
   background: transparent;
   border-right: 1px solid var(--border);
   min-width: 0; min-height: 0;
-  transition: transform .25s ease, opacity .25s ease;
+  transition: transform .25s ease;
   transform: translateX(-100%);
+  opacity: 0%;
 }
-  body:not(.collapsed) #sidebar { transform: translateX(0); }
+  body:not(.collapsed) #sidebar { transform: translateX(0); opacity: 100%; }
 .sidebar-header, .sidebar-footer{
   padding: 12px;
   background: transparent;
@@ -179,7 +180,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 #chat-box .bubble p{ margin:8px 0; }
 #chat-box .bubble ul, #chat-box .bubble ol{ margin:8px 0 8px 22px; }
 #chat-box .bubble code, #chat-box .bubble pre{
-  background:#232323; border:1px solid var(--border); border-radius:8px;
+  background:#1414149d; border:1px solid var(--border); border-radius:8px;
 }
 #chat-box .bubble pre{ padding:10px; overflow-x:auto; }
 #chat-box .bubble .mjx-container{ overflow-x:auto; padding:2px 0; }
@@ -238,15 +239,15 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 }
 .code-meta{
   font:12px/1.2 system-ui, -apple-system, Segoe UI, Arial;
-  opacity:.85; background:#2222228f; border:1px solid var(--border);
+  opacity:.85; background:#1414149d; border:1px solid var(--border);
   color:#ddd; border-radius:6px; padding:2px 6px; pointer-events:auto;
 }
 .code-header .copy-btn{
   position:static; padding:4px 8px;
-  border:1px  var(--border); background:#2a2a2a;
+  border:1px  var(--border); background:#1414149d;
   color:var(--text); border-radius:6px; cursor:pointer; pointer-events:auto;
 }
-.code-header .copy-btn:hover{ background: #2222228f222; }
+.code-header .copy-btn:hover{ background: #2222228f; }
 
 /* SCROLLBARS */
 #conv-list::-webkit-scrollbar,
@@ -391,7 +392,7 @@ body.modal-open{ overflow: hidden; }
   #layout { grid-template-columns: 1fr; }
   #sidebar {
     position: absolute; z-index: 5; height: calc(100dvh - 56px); width: min(320px, var(--sidebar-w));
-    transform: translateX(-100%); transition: transform .25s ease, opacity .25s ease;
+    transform: translateX(-100%); transition: transform .25s ease, opacity .25s ease; background: var(--bg);
   }
   body:not(.collapsed) #layout { grid-template-columns: 1fr; }
   body.collapsed #layout { grid-template-columns: 1fr; }
