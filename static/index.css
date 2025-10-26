@@ -225,7 +225,7 @@ body.collapsed #layout{ grid-template-columns: 0 1fr; }
 #bottom-spacer{ height: calc(var(--composer-h) + env(safe-area-inset-bottom) + 12px); }
 
 /* BLOQUES DE CÓDIGO */
-.code-wrap{ position:relative; padding-top: 20px;}
+.code-wrap{ position:relative; padding-top: 20px; }
 .code-wrap pre code.hljs{
   display:block;
   --code-header-h: 34px;
