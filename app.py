@@ -39,7 +39,7 @@ def set_sqlite_pragma(dbapi_connection, _):
         pass
 
 client = OpenAI(api_key=(os.getenv("OPENAI_API_KEY") or "").strip())
-MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
 
 class User(db.Model):
     __tablename__ = "user"
@@ -210,7 +210,6 @@ def chat():
         response = client.chat.completions.create(
             model=MODEL,
             messages=messages,
-            temperature=0.4,
         )
         reply = response.choices[0].message.content
     except RequestEntityTooLarge:
